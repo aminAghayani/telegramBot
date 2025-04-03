@@ -2,8 +2,8 @@ import telegram
 import time
 
 # Replace with your bot token and channel ID
-BOT_TOKEN = "YOUR_BOT_TOKEN"
-CHANNEL_ID = "YOUR_CHANNEL_ID"
+BOT_TOKEN = "7794516283:AAEp8cOhW8Nc_Iphq_7PUgb_mspCEutWZM8"
+CHANNEL_ID = "-1002504539586"
 
 bot = telegram.Bot(token=BOT_TOKEN)
 
