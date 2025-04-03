@@ -1,0 +1,21 @@
+name: Telegram Bot  
+on:  
+  schedule:  
+    - cron: '*/1 * * * *'  # Runs every minute  
+jobs:  
+  send_message:  
+    runs-on: ubuntu-latest  
+    steps:  
+      - name: Checkout code  
+        uses: actions/checkout@v3  
+      - name: Set up Python  
+        uses: actions/setup-python@v4  
+        with:  
+          python-version: '3.x'  
+      - name: Install dependencies  
+        run: pip install python-telegram-bot  
+      - name: Run the bot  
+        env:  
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}  
+          CHANNEL_ID: ${{ secrets.CHANNEL_ID }}  
+        run: python bot.py  
