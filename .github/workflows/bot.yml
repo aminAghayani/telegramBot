@@ -1,23 +1,26 @@
-name: Send Message to Telegram Bot
+name: Send Telegram Message
 
 on:
-  push:
-    branches:
-      - main  # This will run the action when you push to the main branch
+  workflow_dispatch:  # This allows manual trigger from GitHub Actions UI
 
 jobs:
   send_message:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: pip install requests python-telegram-bot
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-      - name: Send message to bot
+      - name: Install requests library
+        run: pip install requests
+
+      - name: Run Telegram Bot Script
         env:
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}  # The token for your bot
-          USER_ID: ${{ secrets.USER_ID }}  # Your user ID or bot's chat ID
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
         run: python bot.py
