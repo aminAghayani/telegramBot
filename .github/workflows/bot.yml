@@ -17,7 +17,9 @@ jobs:
           python-version: '3.x'
 
       - name: Install requests library
-        run: pip install requests
+        run: 
+          pip install requests
+          pip install selenium
 
       - name: Run Telegram Bot Script
         env:
