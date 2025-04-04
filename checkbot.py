@@ -18,7 +18,7 @@ options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
 
 # Start Firefox WebDriver
-driver = webdriver.Firefox(options=options)
+driver = webdriver.Firefox()
 
 # Keep track of cities we've already sent alerts for
 reported_cities = set()
