@@ -1,49 +1,60 @@
 import os
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from telegram import Bot
 
 # Get credentials from environment
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-CHANNEL_ID = os.getenv("CHANNEL_ID")
+CHANNEL_ID = os.getenv("CHANNEL_ID")  # Should be something like -1001234567890
 URL = "https://aminaghayani.github.io/studenwerk/"
 
-# Telegram bot init
+# Initialize Telegram Bot
 bot = Bot(token=BOT_TOKEN)
 
-# Set Firefox binary path (Linux default)
-firefox_binary_path = "/usr/bin/firefox"
-geckodriver_path = "/usr/local/bin/geckodriver"  # Location where you install it
-
-# Setup headless Firefox
+# Configure Firefox to run headless (no GUI needed)
 options = Options()
-options.binary = FirefoxBinary(firefox_binary_path)
-options.headless = True
+options.add_argument("--headless")
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
 
-# Start WebDriver
-driver = webdriver.Firefox(executable_path=geckodriver_path, options=options)
+# Start Firefox WebDriver
+driver = webdriver.Firefox(options=options)
 
-# Track cities already reported
+# Keep track of cities we've already sent alerts for
 reported_cities = set()
 
 def check_and_send_message():
     driver.get(URL)
-    select = driver.find_element("id", "citySelect")
-    options_list = select.find_elements("tag name", "option")
 
-    for option in options_list:
-        city = option.get_attribute("value")
-        label = option.text.strip()
+    # Find the dropdown
+    select = driver.find_element("id", "citySelect")
+    option_elements = select.find_elements("tag name", "option")
+
+    available_cities = []
+
+    for option in option_elements:
+        city_value = option.get_attribute("value")
+        city_label = option.text.strip()
         is_disabled = option.get_attribute("disabled") is not None
 
-        print(f"{label} -> {'Disabled' if is_disabled else 'Enabled'}")
+        print(f"City: {city_label} -> {'Disabled' if is_disabled else 'Enabled'}")
 
-        if city and not is_disabled and city not in reported_cities:
-            message = f"🚨 {label} ist jetzt verfügbar!"
-            print(f"Sending Telegram message: {message}")
-            bot.send_message(chat_id=CHANNEL_ID, text=message)
-            reported_cities.add(city)
+        # Skip empty value or disabled cities
+        if city_value and not is_disabled:
+            available_cities.append(city_value)
 
+            if city_value not in reported_cities:
+                # Send a Telegram message
+                message = f"🚨 {city_label} ist jetzt verfügbar!"
+                print(f"Sending Telegram message: {message}")
+                bot.send_message(chat_id=CHANNEL_ID, text=message)
+                reported_cities.add(city_value)
+
+    if not available_cities:
+        print("No available cities at this time.")
+
+# Run the check
 check_and_send_message()
+
+# Clean up
 driver.quit()
