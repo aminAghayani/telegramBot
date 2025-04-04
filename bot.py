@@ -1,24 +1,30 @@
 import os
 import requests
 
-# Get the bot token and the user ID from environment variables
+# Get bot token and channel ID from environment variables
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-USER_ID = os.getenv("USER_ID")
+CHANNEL_ID = os.getenv("CHANNEL_ID")  # Use the -100... ID
 
-# Define the message you want to send
-message = "Hello, this is a message sent from GitHub Action!"
+# Ensure variables are set
+if not BOT_TOKEN or not CHANNEL_ID:
+    print("❌ Error: BOT_TOKEN or CHANNEL_ID not set.")
+    exit(1)
 
-# Construct the URL to send the message to your bot
+# Message to send
+message = "Hello, this is a test message from GitHub Actions to my private channel!"
+
+# Telegram API endpoint
 url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
-# Make the API request
+# Send the message
 response = requests.post(url, data={
-    'chat_id': USER_ID,
+    'chat_id': CHANNEL_ID,
     'text': message
 })
 
-# Check the response
+# Check response
 if response.status_code == 200:
-    print("Message sent successfully!")
+    print("✅ Message sent to private channel successfully!")
 else:
-    print(f"Failed to send message: {response.status_code}")
+    print(f"❌ Failed to send message: {response.status_code}")
+    print(f"Response: {response.text}")  # Debugging info
