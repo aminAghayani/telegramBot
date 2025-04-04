@@ -1,7 +1,7 @@
 name: Send Telegram Message
 
 on:
-  workflow_dispatch:  # Manual trigger from GitHub UI
+  workflow_dispatch:
 
 jobs:
   send_message:
@@ -16,21 +16,20 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install dependencies
+      - name: Install dependencies and Firefox
         run: |
-          pip install requests
-          pip install selenium
-          pip install python-telegram-bot
+          pip install requests selenium python-telegram-bot
 
           sudo apt-get update
           sudo apt-get install -y firefox
 
-          # Install geckodriver (for Firefox)
-          wget https://github.com/mozilla/geckodriver/releases/latest/download/geckodriver-v0.34.0-linux64.tar.gz
-          tar -xzf geckodriver-v0.34.0-linux64.tar.gz
+          # Download latest geckodriver release dynamically
+          GECKO_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+          wget "https://github.com/mozilla/geckodriver/releases/download/v$GECKO_VERSION/geckodriver-v$GECKO_VERSION-linux64.tar.gz"
+          tar -xzf "geckodriver-v$GECKO_VERSION-linux64.tar.gz"
           chmod +x geckodriver
           sudo mv geckodriver /usr/local/bin/
-
+          
       - name: Run Telegram Bot Script
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
