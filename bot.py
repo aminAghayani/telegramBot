@@ -1,15 +1,18 @@
 import telegram
-import time
+import os
 
-# Replace with your bot token and channel ID
-BOT_TOKEN = "7794516283:AAEp8cOhW8Nc_Iphq_7PUgb_mspCEutWZM8"
-CHANNEL_ID = "-1002504539586"
+# Read token and channel ID from environment variables (GitHub Secrets)
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+CHANNEL_ID = os.getenv("CHANNEL_ID")
 
+if not BOT_TOKEN or not CHANNEL_ID:
+    print("Error: BOT_TOKEN or CHANNEL_ID not set.")
+    exit(1)
+
+# Initialize bot
 bot = telegram.Bot(token=BOT_TOKEN)
 
-def send_message():
-    bot.send_message(chat_id=CHANNEL_ID, text="Hello! This is a scheduled message.")
+# Send a message
+bot.send_message(chat_id=CHANNEL_ID, text="Hello! This is a message from GitHub Actions.")
 
-while True:
-    send_message()
-    time.sleep(60)  # Wait for 1 minute
+print("Message sent successfully.")
