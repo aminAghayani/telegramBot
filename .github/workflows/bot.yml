@@ -31,6 +31,7 @@ jobs:
           
           # Install the correct version of ChromeDriver (version 135.x.x.x)
           CHROMEDRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_135)
+          echo "ChromeDriver version: $CHROMEDRIVER_VERSION"
           wget https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip
           unzip chromedriver_linux64.zip
           sudo mv chromedriver /usr/local/bin/  # Move it to a directory in PATH
