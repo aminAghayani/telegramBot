@@ -5,6 +5,9 @@ from selenium.webdriver.chrome.options import Options
 from telegram import Bot
 import time
 
+# Automatically download and install the correct version of ChromeDriver
+chromedriver_autoinstaller.install()
+
 # Get bot token and channel ID from environment variables
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHANNEL_ID = os.getenv("CHANNEL_ID")  # Use the -100... ID
