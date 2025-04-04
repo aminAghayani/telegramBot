@@ -14,10 +14,10 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install requests python-telegram-bot
 
       - name: Send message to bot
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}  # The token for your bot
           USER_ID: ${{ secrets.USER_ID }}  # Your user ID or bot's chat ID
-        run: python send_message.py
+        run: python bot.py
