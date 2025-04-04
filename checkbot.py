@@ -12,13 +12,11 @@ URL = "https://aminaghayani.github.io/studenwerk/"
 bot = Bot(token=BOT_TOKEN)
 
 # Configure Firefox to run headless (no GUI needed)
-options = Options()
-options.add_argument("--headless")
-options.add_argument("--no-sandbox")
-options.add_argument("--disable-dev-shm-usage")
+options = webdriver.FirefoxOptions()
+options.headless = True
 
 # Start Firefox WebDriver
-driver = webdriver.Firefox()
+driver = webdriver.Firefox(options=options)
 
 # Keep track of cities we've already sent alerts for
 reported_cities = set()
