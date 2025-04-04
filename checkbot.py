@@ -1,12 +1,8 @@
 import os
-import chromedriver_autoinstaller
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from telegram import Bot
 import time
-
-# Automatically download and install the correct version of ChromeDriver
-chromedriver_autoinstaller.install()
 
 # Get bot token and channel ID from environment variables
 BOT_TOKEN = os.getenv("BOT_TOKEN")
