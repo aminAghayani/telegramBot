@@ -1,29 +1,24 @@
 import os
-from telegram import Update
-from telegram.ext import Updater, MessageHandler, Filters, CallbackContext
+import requests
 
-# Read environment variables
+# Get the bot token and the user ID from environment variables
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-CHANNEL_ID = os.getenv("CHANNEL_ID")
+USER_ID = os.getenv("USER_ID")
 
-if not BOT_TOKEN or not CHANNEL_ID:
-    print("❌ Error: BOT_TOKEN or CHANNEL_ID not set.")
-    exit(1)
+# Define the message you want to send
+message = "Hello, this is a message sent from GitHub Action!"
 
-# Initialize the bot and the updater
-updater = Updater(BOT_TOKEN, use_context=True)
-dispatcher = updater.dispatcher
+# Construct the URL to send the message to your bot
+url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
-# Function to handle incoming messages
-def forward_to_channel(update: Update, context: CallbackContext):
-    # Get the message text from the user
-    message = update.message.text
-    # Send the message to the channel
-    context.bot.send_message(chat_id=CHANNEL_ID, text=message)
+# Make the API request
+response = requests.post(url, data={
+    'chat_id': USER_ID,
+    'text': message
+})
 
-# Add a message handler to forward all messages to the channel
-dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, forward_to_channel))
-
-# Start the bot
-updater.start_polling()
-updater.idle()
+# Check the response
+if response.status_code == 200:
+    print("Message sent successfully!")
+else:
+    print(f"Failed to send message: {response.status_code}")
