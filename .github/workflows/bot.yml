@@ -1,10 +1,10 @@
-name: Send Telegram Message
+name: Check Available Cities
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
-  send_message:
+  check_cities:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,33 +14,10 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.x'
 
-      - name: Install Python dependencies
-        run: |
-          pip install selenium==3.11
-          pip install python-telegram-bot==13.15  # Compatible with Python 3.10
+      - name: Install Dependencies
+        run: pip install requests beautifulsoup4
 
-      - name: Install Firefox 120
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget tar libdbus-glib-1-2
-          
-          # Download and install Firefox 120
-          wget -q https://ftp.mozilla.org/pub/firefox/releases/120.0/linux-x86_64/en-US/firefox-120.0.tar.bz2
-          tar xjf firefox-120.0.tar.bz2
-          sudo mv firefox /opt/firefox120
-          sudo ln -sf /opt/firefox120/firefox /usr/bin/firefox
-
-      - name: Install Geckodriver 0.33
-        run: |
-          wget -q https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz
-          tar -xzf geckodriver-v0.33.0-linux64.tar.gz
-          chmod +x geckodriver
-          sudo mv geckodriver /usr/local/bin/
-
-      - name: Run Telegram Bot Script
-        env:
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
+      - name: Run Script
         run: python checkbot.py
