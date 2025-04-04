@@ -21,6 +21,8 @@ jobs:
           pip install requests
           pip install selenium
           pip install python-telegram-bot  # Install python-telegram-bot
+          pip install chromedriver-autoinstaller  # Install chromedriver autoinstaller
+
           sudo apt-get update
           sudo apt-get install -y wget unzip
 
@@ -29,17 +31,11 @@ jobs:
           sudo dpkg -i google-chrome-stable_current_amd64.deb
           sudo apt-get install -f  # Fix missing dependencies for Chrome
 
-          # Fetch the correct ChromeDriver version (for Chrome 135)
-          CHROMEDRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_135)
-          echo "ChromeDriver version: $CHROMEDRIVER_VERSION"
-
-          # Download the correct ChromeDriver version
-          wget https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip
-          unzip chromedriver_linux64.zip
-          sudo mv chromedriver /usr/local/bin/  # Move it to a directory in PATH
-
       - name: Run Telegram Bot Script
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
-        run: python checkbot.py
+        run: |
+          # Use chromedriver-autoinstaller to automatically download and set up the correct ChromeDriver version
+          python -m chromedriver_autoinstaller
+          python checkbot.py
