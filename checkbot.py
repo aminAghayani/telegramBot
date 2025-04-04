@@ -1,5 +1,5 @@
 import os
-import chromedriver-autoinstaller
+import chromedriver_autoinstaller
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from telegram import Bot
