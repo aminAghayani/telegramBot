@@ -1,7 +1,7 @@
 name: Send Telegram Message
 
 on:
-  workflow_dispatch:  # This allows manual trigger from GitHub Actions UI
+  workflow_dispatch:  # Manual trigger from GitHub UI
 
 jobs:
   send_message:
@@ -20,24 +20,20 @@ jobs:
         run: |
           pip install requests
           pip install selenium
-          pip install python-telegram-bot  # Install python-telegram-bot
-          pip install chromedriver-autoinstaller  # Install chromedriver autoinstaller
+          pip install python-telegram-bot
 
           sudo apt-get update
-          sudo apt-get install -y wget unzip
+          sudo apt-get install -y firefox
 
-          # Install Google Chrome
-          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
-          sudo sh -c 'echo "deb https://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-          sudo apt-get update
-          sudo apt-get install -y xdg-utils
-          sudo apt-get install google-chrome-stable
+          # Install geckodriver (for Firefox)
+          wget https://github.com/mozilla/geckodriver/releases/latest/download/geckodriver-v0.34.0-linux64.tar.gz
+          tar -xzf geckodriver-v0.34.0-linux64.tar.gz
+          chmod +x geckodriver
+          sudo mv geckodriver /usr/local/bin/
 
       - name: Run Telegram Bot Script
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
         run: |
-          # Use chromedriver-autoinstaller to automatically download and set up the correct ChromeDriver version
-          python -m chromedriver_autoinstaller
           python checkbot.py
