@@ -1,31 +1,31 @@
 import os
-import time
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service as FirefoxService
 from telegram import Bot
 
 # Environment variables from GitHub Secrets
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-CHANNEL_ID = os.getenv("CHANNEL_ID")  # Use the -100... form for channels
+CHANNEL_ID = os.getenv("CHANNEL_ID")
 
-# URL to the HTML page with the dropdown
 URL = 'https://aminaghayani.github.io/studenwerk/'
 
-# Set up Telegram bot
 bot = Bot(token=BOT_TOKEN)
 
-# Set up Firefox WebDriver (headless)
+# Set up Firefox in headless mode
+firefox_binary_path = "/usr/bin/firefox"
 options = Options()
+options.binary_location = firefox_binary_path
 options.add_argument("--headless")
-driver = webdriver.Firefox(options=options)
 
-# Set of reported cities to prevent duplicates
+service = FirefoxService()
+driver = webdriver.Firefox(service=service, options=options)
+
 reported_cities = set()
 
 def check_and_send_message():
     driver.get(URL)
 
-    # Find the <select> element and its options
     select = driver.find_element("id", "citySelect")
     options = select.find_elements("tag name", "option")
 
@@ -48,8 +48,5 @@ def check_and_send_message():
     if available_cities:
         print(f"Available cities: {', '.join(available_cities)}")
 
-# Run once
 check_and_send_message()
-
-# Quit browser after run
 driver.quit()
