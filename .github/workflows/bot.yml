@@ -20,6 +20,7 @@ jobs:
         run: |
           pip install requests
           pip install selenium
+          pip install python-telegram-bot  # Install python-telegram-bot
           sudo apt-get update
           sudo apt-get install -y wget unzip
           
