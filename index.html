@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>City Select Toggle</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .checkbox-group {
+      margin-bottom: 20px;
+    }
+    label {
+      margin-right: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Activate/Deactivate City Options</h2>
+
+  <div class="checkbox-group">
+    <label><input type="checkbox" onchange="setCityOption('Dortmund', this.checked)"> Dortmund</label>
+    <label><input type="checkbox" onchange="setCityOption('Hagen', this.checked)"> Hagen</label>
+    <label><input type="checkbox" onchange="setCityOption('Iserlohn', this.checked)"> Iserlohn</label>
+    <label><input type="checkbox" onchange="setCityOption('Soest', this.checked)"> Soest</label>
+  </div>
+
+  <select class="form-control" name="tx_openimmo_list[tx_openimmo_list][city]" id="citySelect">
+    <option value="">Alle</option>
+    <option id="opt-dortmund" disabled value="Dortmund">Dortmund (Keine Angebote)</option>
+    <option id="opt-hagen" disabled value="Hagen">Hagen (Keine Angebote)</option>
+    <option id="opt-iserlohn" disabled value="Iserlohn">Iserlohn (Keine Angebote)</option>
+    <option id="opt-soest" disabled value="Soest">Soest (Keine Angebote)</option>
+  </select>
+
+  <script>
+    function setCityOption(city, enable) {
+      const option = document.getElementById(`opt-${city.toLowerCase()}`);
+      if (option) {
+        option.disabled = !enable;
+        option.textContent = enable ? city : `${city} (Keine Angebote)`;
+      }
+    }
+  </script>
+
+</body>
+</html>
